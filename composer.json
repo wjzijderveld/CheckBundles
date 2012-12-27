@@ -1,0 +1,23 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+{
+    "name":         "wjzijderveld/CheckBundles",
+    "descriptions": "A script which checks for bundles in your composer.json that aren't registered in your Kernel. For now, only packages with type symfony-bundle will be checked",
+    "keywords": ["composer", "script", "symfony", "bundles", "check"],
+    "version": "0.0.1-dev",
+    "type": "library",
+    "homepage": "https://github.com/wjzijderveld/CheckBundles",
+    "license": "MIT",
+    "authors": [{
+        "name": "Willem-Jan Zijderveld",
+        "role": "Developer"
+    }],
+    "require": {
+        "symfony/HttpKernel": ">=2.*",
+    },
+    "scripts": {
+        "post-update-cmd": "WillemJan\\CheckBundles::postUpdate"
+    }
+}
