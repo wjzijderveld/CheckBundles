@@ -13,8 +13,6 @@
         "symfony/http-kernel": ">=2.0.0"
     },
     "autoload": {
-        "psr-0": {
-            "WillemJan": "lib/",
-        }
+        "psr-0": {"WillemJan": "lib/"}
     }
 }
