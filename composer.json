@@ -1,6 +1,6 @@
 {
     "name":         "wjzijderveld/check-bundles",
-    "descriptions": "A script which checks for bundles in your composer.json that aren't registered in your Kernel. For now, only packages with type symfony-bundle will be checked",
+    "description":  "A script which checks for bundles in your composer.json that aren't registered in your Kernel. For now, only packages with type symfony-bundle will be checked",
     "keywords": ["composer", "script", "symfony", "bundles", "check"],
     "type": "library",
     "homepage": "https://github.com/wjzijderveld/CheckBundles",
