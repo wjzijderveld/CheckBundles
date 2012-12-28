@@ -10,10 +10,20 @@ use Composer\Scripts\Event;
  */
 class CheckBundles {
     
-    static public function postUpdate(Event $event) {
-        
+    static public function postUpdate(Event $event) 
+    {
+        $self = new self;
+        $self->run();
     }
-    
+
+    public function run() 
+    {
+        if (!class_exists('AppKernel')) {
+            throw new \Exception('CheckBundles currently only works with AppKernel');
+        }
+        
+        echo $bundleContent = \ReflectionMethod::export('AppKernel', 'registerBundles');
+    }
 }
 
 ?>
