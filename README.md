@@ -3,6 +3,8 @@ CheckBundles
 
 A script to check which Symfony Bundles there are installerd thru composer, but are not active in AppKernel.
 
+[![Build Status](https://travis-ci.org/wjzijderveld/CheckBundles.png?branch=master)](https://travis-ci.org/wjzijderveld/CheckBundles)
+
 Installation
 ============
 The package is not yet on packagist, so you need to add a manual repository.
