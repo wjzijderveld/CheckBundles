@@ -44,5 +44,5 @@ ToDo
 
 * Test if it actually works when installed thru composer
 * Write *more* tests (sorry @grmpyprogrammer)
-* Submit to packagist
+* _Submit to packagist_ (done: wjzijderveld/check-bundles)
 * ...
