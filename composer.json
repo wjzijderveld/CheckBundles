@@ -12,7 +12,11 @@
     "require": {
         "symfony/http-kernel": ">=2.0.0"
     },
+    "require-dev": {
+        "composer/composer": "*"
+        },
     "autoload": {
         "psr-0": {"WillemJan": "lib/"}
-    }
+    },
+    "minimum-stability": "dev"
 }
