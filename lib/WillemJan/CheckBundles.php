@@ -82,17 +82,6 @@ class CheckBundles {
         }
         
         return $bundles;
-        
-        /**
-        $refMethod = new \ReflectionMethod($this->kernelName, 'registerBundles');
-        $from = $refMethod->getStartLine();
-        $end = $refMethod->getEndLine();
-        
-        $kernelLines = file($kernelFile);
-        $bundleLines = array_slice($kernelLines, $from, $end);
-        
-        var_dump($bundleLines);        
-        */
     }
     
     protected function getConfiguredBundles()
