@@ -10,7 +10,7 @@ use Composer\Scripts\Event;
  */
 class CheckBundles {
     
-    static public function postUpdate(Event $event) 
+    static public function postPackageUpdate(Event $event) 
     {
         $self = new self;
         $self->run();
@@ -23,6 +23,7 @@ class CheckBundles {
         }
         
         echo $bundleContent = \ReflectionMethod::export('AppKernel', 'registerBundles');
+        var_dump($bundleContent);
     }
 }
 
