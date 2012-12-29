@@ -26,20 +26,33 @@ class ComposerHelper
     }
     
     /**
+     * @return \Composer\Repository\InstalledRepositoryInterface
+     */
+    protected function getInstalledRepository()
+    {
+        return $this->composer->getRepositoryManager()->getLocalRepository();
+    }
+    
+    protected function findBundleFiles(PackageInterface $package)
+    {
+        $installPath = $this->composer->getInstallationManager()->getInstallPath($package);
+        return glob($installPath . '/*Bundle.php');
+    }
+    
+    /**
      * @return array
      */
     public function getConfiguredSymfonyBundles()
     {
         $symfonyBundles = array();
         
-        $installedRepo = $this->composer->getRepositoryManager()->getLocalRepository();
+        $installedRepo = $this->getInstalledRepository();
         foreach ($installedRepo->getPackages() as $package) {
             /** 
              * @var $package \Composer\Package\CompletePackage
              */
             if ($package->getType() == 'symfony-bundle') {
-                $installPath = $this->composer->getInstallationManager()->getInstallPath($package);
-                $bundleFiles = glob($installPath . '/*Bundle.php');
+                $bundleFiles = $this->findBundleFiles($package);
                 if (count($bundleFiles)) {
                     // Take the first first we find
                     // Not sure how to find the Bundle's name any other way
