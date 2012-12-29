@@ -30,6 +30,22 @@ class KernelHelper
     }
     
     /**
+     * @return string
+     */
+    public function getProjectRoot() 
+    {
+        return $this->projectRoot;
+    }
+
+    /**
+     * @param string $projectRoot
+     */
+    public function setProjectRoot($projectRoot) 
+    {
+        $this->projectRoot = $projectRoot;
+    }
+   
+    /**
      * Creates a given kernel
      * 
      * @param string $kernelName
