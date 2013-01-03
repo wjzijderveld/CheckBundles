@@ -7,7 +7,13 @@ A script to check which Symfony Bundles there are installerd thru composer, but 
 
 Installation
 ============
-The package is not yet on packagist, so you need to add a manual repository.
+The package is on packagist, so the easiest way is to add it to your composer.json:
+
+	"require": {
+		"wjzijderveld/check-bundles": "dev-master"
+	}
+	
+If you can't or don't want to use packagist, you need to add a manual repository.
 
     "repositories": [
         {
@@ -16,7 +22,7 @@ The package is not yet on packagist, so you need to add a manual repository.
         }
     ]
 	
-Also, because scripts are not executed from nested repositories. You need to add the script:
+Because scripts are not executed from nested repositories, you need to add the script itself to your composer.json:
 
     "scripts": {
         "post-install-cmd": [
@@ -43,6 +49,9 @@ ToDo
 ====
 
 * Test if it actually works when installed thru composer
-* Write *more* tests (sorry @grmpyprogrammer)
-* _Submit to packagist_ (done: wjzijderveld/check-bundles)
+* Write *more* tests
 * ...
+
+Feedback
+========
+I would really like some feedback, so feel free to create a issue/PR or email me.
