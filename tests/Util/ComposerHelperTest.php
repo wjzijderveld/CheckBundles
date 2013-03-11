@@ -59,10 +59,12 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
     
     protected function getExamplePackages()
     {
+        $demoBundle = $this->createPackageMock('symfony-bundle', 'Acme/DemoBundle');
         $packages = array(
             $this->createPackageMock('library', 'foo/testLibrary'),
-            $this->createPackageMock('symfony-bundle', 'Acme/DemoBundle'),
             $this->createPackageMock('symfony-bundle', 'Doctrine/ORM/DoctrineBundle'),
+            $demoBundle,
+            new \Composer\Package\AliasPackage($demoBundle, '1.0.0', 'v1.0.0'),
         );
         
         return $packages;
@@ -100,8 +102,8 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
         $bundles = $helper->getConfiguredSymfonyBundles();
         
         $this->assertEquals(array(
-            'Acme\DemoBundle\FooBarBundle',
             'Doctrine\ORM\DoctrineBundle\FooBarBundle',
+            'Acme\DemoBundle\FooBarBundle',
         ), $bundles);
     }
 }

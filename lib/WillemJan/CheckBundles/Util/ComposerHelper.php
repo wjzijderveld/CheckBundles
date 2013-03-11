@@ -13,6 +13,7 @@
 namespace WillemJan\CheckBundles\Util;
 
 use Composer\Composer;
+use Composer\Package\AliasPackage;
 use Composer\Package\PackageInterface;
 
 class ComposerHelper 
@@ -51,6 +52,11 @@ class ComposerHelper
             /** 
              * @var $package \Composer\Package\CompletePackage
              */
+
+            if ($package instanceOf AliasPackage) {
+                continue;
+            }
+
             if ($package->getType() == 'symfony-bundle') {
                 $bundleFiles = $this->findBundleFiles($package);
                 if (count($bundleFiles)) {
