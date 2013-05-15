@@ -37,7 +37,7 @@ class ComposerHelper
     protected function findBundleFiles(PackageInterface $package)
     {
         $installPath = $this->composer->getInstallationManager()->getInstallPath($package);
-        return glob($installPath . '/*Bundle.php');
+        return glob($installPath . DIRECTORY_SEPARATOR . '*Bundle.php');
     }
     
     /**
