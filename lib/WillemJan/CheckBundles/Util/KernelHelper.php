@@ -85,13 +85,16 @@ class KernelHelper
     public function getBundlesForKernels(array $kernels) 
     {
         $bundles = array();
-        foreach ($kernels as $name => $environment) {
-            $kernel = $this->createKernel($name, $environment);
-            $registeredBundles = array();
-            foreach ($kernel->registerBundles() as $bundle) {
-                $registeredBundles[] = get_class($bundle);
+        foreach ($kernels as $name => $environments) {
+            $environments = (array)$environments;
+            foreach ($environments as $environment) {
+                $kernel = $this->createKernel($name, $environment);
+                $registeredBundles = array();
+                foreach ($kernel->registerBundles() as $bundle) {
+                    $registeredBundles[] = get_class($bundle);
+                }
+                $bundles = array_merge($bundles, $registeredBundles);
             }
-            $bundles = array_merge($bundles, $registeredBundles);
         }
         
         return $bundles;

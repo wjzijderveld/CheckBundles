@@ -72,7 +72,7 @@ class CheckBundles {
     }
     
     /**
-     * @return \WillemJan\Util\ComposerHelper
+     * @return \WillemJan\CheckBundles\Util\ComposerHelper
      */
     public function getComposerHelper()
     {
@@ -105,16 +105,9 @@ class CheckBundles {
         $currentActiveBundles = $kernelHelper->getBundlesForKernels($this->getKernels());
         
         $composerHelper = $this->getComposerHelper();
-        
-        $configuredBundles = $composerHelper->getConfiguredSymfonyBundles();
-        
-        $nonActiveBundles = array();
-        foreach ($configuredBundles as $bundle) {
-            if (!in_array($bundle, $currentActiveBundles)) {
-                $nonActiveBundles[] = $bundle;
-            }
-        }
-        
+
+        $nonActiveBundles = $composerHelper->getNonActiveSymfonyBundles($currentActiveBundles);
+
         if (!count($nonActiveBundles)) {
             $this->event->getIO()->write('No inactive bundles found');
         } else {

@@ -15,6 +15,12 @@
  *
  * @author willemjan
  */
-class FooBundle { }
-class BarBundle { }
-class FooBarBundle { }
+
+namespace Acme {
+
+    class FooBundle { }
+    class BarBundle { }
+    class FooBarBundle { }
+    class LibraryBundle { }
+
+}

@@ -10,6 +10,7 @@
  * file that was distributed with this source code.
  */
 namespace WillemJan\CheckBundles\Util;
+use Composer\Package\RootPackage;
 
 /**
  * Description of ComposerHelperTest
@@ -18,15 +19,15 @@ namespace WillemJan\CheckBundles\Util;
  */
 class ComposerHelperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var \Composer\Composer|PHPUnit_Framework_MockObject */
+    /** @var \Composer\Composer|\PHPUnit_Framework_MockObject_MockObject */
     protected $composerMock;
     
-    /** @var \Composer\Repository\InstalledRepositoryInterface|PHPUnit_Framework_MockObject */
+    /** @var \Composer\Repository\InstalledRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject */
     protected $localRepository;
     
     public function setUp()
     {
-        $this->composerMock = $this->getMock('\Composer\Composer', array('getInstallationManager'));
+        $this->composerMock = $this->getMock('\Composer\Composer', array('getInstallationManager', 'getPackage'));
         $this->localRepository = $this->getMock('\Composer\Repository\InstalledArrayRepository', array('getPackages'));
     }
     
@@ -43,9 +44,13 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
      * @param string $targetDir
      * @return \Composer\Package\CompletePackage
      */
-    protected function createPackageMock($type, $targetDir)
+    protected function createPackageMock($name, $type, $targetDir)
     {
-        $package = $this->getMock('Composer\Package\CompletePackage', array('getTargetDir', 'getType'), array(), '', false);
+        $package = $this->getMockBuilder('Composer\Package\CompletePackage')
+            ->setMethods(array('getTargetDir', 'getType'))
+            ->setConstructorArgs(array($name, 'dev-master', '1.x-dev'))
+            ->getMock();
+
         $package->expects($this->any())
                 ->method('getType')
                 ->will($this->returnValue($type));
@@ -59,10 +64,10 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
     
     protected function getExamplePackages()
     {
-        $demoBundle = $this->createPackageMock('symfony-bundle', 'Acme/DemoBundle');
+        $demoBundle = $this->createPackageMock('acme/demo-bundle', 'symfony-bundle', 'Acme/DemoBundle');
         $packages = array(
-            $this->createPackageMock('library', 'foo/testLibrary'),
-            $this->createPackageMock('symfony-bundle', 'Doctrine/ORM/DoctrineBundle'),
+            $this->createPackageMock('foo/test-library', 'library', 'foo/testLibrary'),
+            $this->createPackageMock('doctrine/doctrine-bundle', 'symfony-bundle', 'Doctrine/ORM/DoctrineBundle'),
             $demoBundle,
             new \Composer\Package\AliasPackage($demoBundle, '1.0.0', 'v1.0.0'),
         );
@@ -90,7 +95,7 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
                 ->method('getPackages')
                 ->will($this->returnValue($this->getExamplePackages()));
         
-        /** @var $helper \WillemJan\CheckBundles\Util\ComposerHelper|\PHPUnit_Framework_MockObject */
+        /** @var $helper \WillemJan\CheckBundles\Util\ComposerHelper|\PHPUnit_Framework_MockObject_MockObject */
         $helper = $this->getMock('WillemJan\CheckBundles\Util\ComposerHelper', array('findBundleFiles', 'getInstalledRepository'), array($this->composerMock));
         $helper->expects($this->any())
                 ->method('findBundleFiles')
@@ -105,5 +110,61 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
             'Doctrine\ORM\DoctrineBundle\FooBarBundle',
             'Acme\DemoBundle\FooBarBundle',
         ), $bundles);
+    }
+
+    public function testIgnoredBundles()
+    {
+        $packages = array(
+            $this->createPackageMock('foo/foo-bundle', 'symfony-bundle', 'Acme\FooBundle'),
+            $this->createPackageMock('acme/library-bundle', 'symfony-bundle', 'Acme\LibraryBundle'),
+        );
+
+        $rootPackage = new RootPackage('DemoPackage', 'dev-master', '1.x-dev');
+        $rootPackage->setExtra(array(
+            'checkbundles-ignore' => array('Acme\LibraryBundle\AcmeLibraryBundle')
+        ));
+
+        $this->composerMock->expects($this->any())
+            ->method('getPackage')
+            ->will($this->returnValue($rootPackage));
+
+        $this->localRepository->expects($this->any())
+            ->method('getPackages')
+            ->will($this->returnValue($packages));
+
+        $kernelHelper = $this->getMockBuilder('WillemJan\Util\KernelHelper')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getBundlesForKernels'))
+            ->getMock();
+
+        $kernelHelper->expects($this->any())
+            ->method('getBundlesForKernels')
+            ->will($this->returnValue(array('Acme\FooBundle\AcmeFooBundle')));
+
+        $composerHelper = $this->getMockBuilder('WillemJan\CheckBundles\Util\ComposerHelper')
+            ->setConstructorArgs(array($this->composerMock))
+            ->setMethods(array('getInstalledRepository', 'findBundleFiles'))
+            ->getMock();
+
+        $composerHelper->expects($this->any())
+            ->method('findBundleFiles')
+            ->will($this->returnCallback(function($package) use($packages) {
+                switch ($package->getName()) {
+                    case 'foo/foo-bundle':
+                        return array('AcmeFooBundle.php');
+                        break;
+                    case 'acme/library-bundle':
+                        return array('AcmeLibraryBundle.php');
+                        break;
+                }
+
+                return array('ShouldNotHappenBundle.php');
+            }));
+
+        $composerHelper->expects($this->any())
+            ->method('getInstalledRepository')
+            ->will($this->returnValue($this->localRepository));
+
+        $this->assertEquals(array(), $composerHelper->getNonActiveSymfonyBundles($kernelHelper->getBundlesForKernels()));
     }
 }

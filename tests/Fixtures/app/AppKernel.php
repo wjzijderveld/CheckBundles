@@ -10,6 +10,9 @@
  * file that was distributed with this source code.
  */
 
+use Acme\BarBundle;
+use Acme\FooBarBundle;
+use Acme\FooBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**

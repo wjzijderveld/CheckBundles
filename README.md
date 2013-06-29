@@ -45,11 +45,16 @@ Or if you have multiple kernels you'd like to check, you can use the _checkbundl
 		}
 	}
 
+You can also choose to ignore some bundles, you might use a bundle without the need to define it in any of your Kernels.
+
+    "extra": {
+        "checkbundles-ignore": ["Acme\IgnoredFooBundle\AcmeIgnoredFooBundle"]
+    }
+
 ToDo
 ====
 
-* Test if it actually works when installed thru composer
-* Write *more* tests
+* Write a functional test that actually uses a composer.json file
 * ...
 
 Feedback

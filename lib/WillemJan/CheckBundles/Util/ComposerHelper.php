@@ -53,6 +53,7 @@ class ComposerHelper
              * @var $package \Composer\Package\CompletePackage
              */
 
+            // Skip Alias packages to avoid duplicates
             if ($package instanceOf AliasPackage) {
                 continue;
             }
@@ -69,6 +70,32 @@ class ComposerHelper
         }
         
         return $symfonyBundles;
+    }
+
+    /**
+     * @param array $kernelBundles
+     */
+    public function getNonActiveSymfonyBundles(array $kernelBundles)
+    {
+        $extra = $this->composer->getPackage()->getExtra();
+        $nonActiveBundles = $this->getConfiguredSymfonyBundles();
+
+        foreach ($nonActiveBundles as $key => $bundle) {
+
+            if (in_array($bundle, $kernelBundles)) {
+                unset($nonActiveBundles[$key]);
+            }
+
+            if (isset($extra['checkbundles-ignore'])) {
+                foreach ($extra['checkbundles-ignore'] as $ignoredBundle) {
+                    if ($ignoredBundle === $bundle) {
+                        unset($nonActiveBundles[$key]);
+                    }
+                }
+            }
+        }
+
+        return $nonActiveBundles;
     }
     
     /**

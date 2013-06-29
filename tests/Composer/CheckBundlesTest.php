@@ -103,8 +103,7 @@ class CheckBundlesTest extends \PHPUnit_Framework_TestCase
         $this->mockComposerObjects(array(
             'checkbundles-kernels' => array(
                 'FooKernel' => 'dev',
-                'BarKernel' => 'dev',
-                'BarKernel' => 'prod',
+                'BarKernel' => array('dev', 'prod'),
             ),
         ));
         
@@ -112,9 +111,8 @@ class CheckBundlesTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals(array(
             'FooKernel' => 'dev', 
-            'BarKernel' => 'dev',
-            'BarKernel' => 'prod',
+            'BarKernel' => array('dev', 'prod'),
         ), $checkBundles2->getKernels());
     }
-    
+
 }

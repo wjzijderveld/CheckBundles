@@ -48,14 +48,14 @@ class KernelHelperTest extends \PHPUnit_Framework_TestCase
         $helper = new KernelHelper($this->fixtureDir);
                 
         $this->assertEquals(array(
-            'FooBundle',
-            'BarBundle',
+            'Acme\FooBundle',
+            'Acme\BarBundle',
         ), $helper->getBundlesForKernels(array('AppKernel' => 'prod')));
         
         $this->assertEquals(array(
-            'FooBundle',
-            'BarBundle',
-            'FooBarBundle',
+            'Acme\FooBundle',
+            'Acme\BarBundle',
+            'Acme\FooBarBundle',
         ), $helper->getBundlesForKernels(array('AppKernel' => 'dev')));
     }
 }
