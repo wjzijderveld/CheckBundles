@@ -48,7 +48,7 @@ Or if you have multiple kernels you'd like to check, you can use the _checkbundl
 You can also choose to ignore some bundles, you might use a bundle without the need to define it in any of your Kernels.
 
     "extra": {
-        "checkbundles-ignore": ["Acme\IgnoredFooBundle\AcmeIgnoredFooBundle"]
+        "checkbundles-ignore": ["Acme\\IgnoredFooBundle\\AcmeIgnoredFooBundle"]
     }
 
 ToDo
