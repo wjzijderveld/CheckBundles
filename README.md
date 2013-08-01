@@ -1,7 +1,7 @@
 CheckBundles
 ============
 
-A script to check which Symfony Bundles there are installerd thru composer, but are not active in AppKernel.
+A script to check which Symfony Bundles there are installed thru composer, but are not active in AppKernel.
 
 [![Build Status](https://travis-ci.org/wjzijderveld/CheckBundles.png?branch=master)](https://travis-ci.org/wjzijderveld/CheckBundles)
 
