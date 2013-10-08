@@ -54,7 +54,7 @@ class ComposerHelper
              */
 
             // Skip Alias packages to avoid duplicates
-            if ($package instanceOf AliasPackage) {
+            if ($package instanceof AliasPackage) {
                 continue;
             }
 
