@@ -71,7 +71,6 @@ class KernelHelper
         }
         
         $kernel = new $kernelName($environment, false);
-        // $kernel->boot();
         
         return $kernel;
     }
