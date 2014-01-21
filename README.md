@@ -6,12 +6,14 @@ A script to check which Symfony Bundles there are installed thru composer, but a
 [![Build Status](https://travis-ci.org/wjzijderveld/CheckBundles.png?branch=master)](https://travis-ci.org/wjzijderveld/CheckBundles)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/053c4ef6-8f1e-40fd-916c-c92019d892af/mini.png)](https://insight.sensiolabs.com/projects/053c4ef6-8f1e-40fd-916c-c92019d892af)
 
+[![Latest Stable Version](https://poser.pugx.org/wjzijderveld/check-bundles/v/stable.png)](https://packagist.org/packages/wjzijderveld/check-bundles) [![Total Downloads](https://poser.pugx.org/wjzijderveld/check-bundles/downloads.png)](https://packagist.org/packages/wjzijderveld/check-bundles) [![License](https://poser.pugx.org/wjzijderveld/check-bundles/license.png)](https://packagist.org/packages/wjzijderveld/check-bundles)
+
 Installation
 ============
 The package is on packagist, so the easiest way is to add it to your composer.json:
 
 	"require": {
-		"wjzijderveld/check-bundles": "dev-master"
+		"wjzijderveld/check-bundles": "~1.0"
 	}
 	
 If you can't or don't want to use packagist, you need to add a manual repository.
