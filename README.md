@@ -4,6 +4,7 @@ CheckBundles
 A script to check which Symfony Bundles there are installed thru composer, but are not active in AppKernel.
 
 [![Build Status](https://travis-ci.org/wjzijderveld/CheckBundles.png?branch=master)](https://travis-ci.org/wjzijderveld/CheckBundles)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/053c4ef6-8f1e-40fd-916c-c92019d892af/mini.png)](https://insight.sensiolabs.com/projects/053c4ef6-8f1e-40fd-916c-c92019d892af)
 
 Installation
 ============
