@@ -2,10 +2,10 @@
 
 /*
  * This file is part of the CheckBundles library
- * 
- * 
+ *
+ *
  * (c) Willem-Jan Zijderveld <wjzijderveld@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,25 +14,25 @@ namespace WillemJan\CheckBundles\Util;
 
 class KernelHelper
 {
-    
+
     /** @var string */
     protected $projectRoot;
-    
+
     /** @var string */
     protected $appDir = 'app';
-    
+
     /** @var string */
     protected $webDir = 'web';
-    
-    public function __construct($projectRoot) 
+
+    public function __construct($projectRoot)
     {
         $this->projectRoot = $projectRoot;
     }
-    
+
     /**
      * @return string
      */
-    public function getProjectRoot() 
+    public function getProjectRoot()
     {
         return $this->projectRoot;
     }
@@ -40,21 +40,21 @@ class KernelHelper
     /**
      * @param string $projectRoot
      */
-    public function setProjectRoot($projectRoot) 
+    public function setProjectRoot($projectRoot)
     {
         $this->projectRoot = $projectRoot;
     }
-   
+
     /**
      * Creates a given kernel
-     * 
-     * @param string $kernelName
-     * @param string $environment
+     *
+     * @param  string                               $kernelName
+     * @param  string                               $environment
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @return \Symfony\Component\HttpKernel\Kernel
      */
-    public function createKernel($kernelName, $environment = 'dev') 
+    public function createKernel($kernelName, $environment = 'dev')
     {
         if (!class_exists($kernelName)) {
             $appDir = $this->projectRoot . DIRECTORY_SEPARATOR . $this->appDir;
@@ -62,30 +62,30 @@ class KernelHelper
             if (!file_exists($kernelFile)) {
                 throw new \InvalidArgumentException(sprintf('Kernel %s not found in %s', $kernelName, $appDir));
             }
-            
+
             require $kernelFile;
-            
+
             if (!class_exists($kernelName)) {
                 throw new \RuntimeException(sprintf('Kernel %s not found in file %s', $kernelName, $kernelFile));
             }
         }
-        
+
         $kernel = new $kernelName($environment, false);
-        
+
         return $kernel;
     }
-    
+
     /**
-     * Collects all bundles 
-     * 
-     * @param array $kernels
+     * Collects all bundles
+     *
+     * @param  array $kernels
      * @return array
      */
-    public function getBundlesForKernels(array $kernels) 
+    public function getBundlesForKernels(array $kernels)
     {
         $bundles = array();
         foreach ($kernels as $name => $environments) {
-            $environments = (array)$environments;
+            $environments = (array) $environments;
             foreach ($environments as $environment) {
                 $kernel = $this->createKernel($name, $environment);
                 $registeredBundles = array();
@@ -95,14 +95,14 @@ class KernelHelper
                 $bundles = array_merge($bundles, $registeredBundles);
             }
         }
-        
+
         return $bundles;
     }
-    
+
     /**
      * @return string
      */
-    public function getAppDir() 
+    public function getAppDir()
     {
         return $this->appDir;
     }
@@ -110,7 +110,7 @@ class KernelHelper
     /**
      * @param string $appDir
      */
-    public function setAppDir($appDir) 
+    public function setAppDir($appDir)
     {
         $this->appDir = $appDir;
     }
@@ -118,7 +118,7 @@ class KernelHelper
     /**
      * @return string
      */
-    public function getWebDir() 
+    public function getWebDir()
     {
         return $this->webDir;
     }
@@ -126,9 +126,9 @@ class KernelHelper
     /**
      * @param string $appDir
      */
-    public function setWebDir($webDir) 
+    public function setWebDir($webDir)
     {
         $this->webDir = $webDir;
     }
-   
+
 }
