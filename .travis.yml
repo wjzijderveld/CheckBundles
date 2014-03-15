@@ -9,4 +9,8 @@ before_script:
   - php composer.phar install --dev
 
 notifications:
-  irc: "chat.freenode.net#wjzijderveld"
+  irc: 
+    channels:
+      - "chat.freenode.net#wjzijderveld"
+    on_success: change
+    on_failure: change
