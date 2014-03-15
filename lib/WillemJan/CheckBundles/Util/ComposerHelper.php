@@ -130,7 +130,7 @@ class ComposerHelper
             $namespace = key($autoload['psr-0']);
             $target = current($autoload['psr-0']);
 
-            return $namespace . '\\' . $bundleName;
+            return rtrim($namespace, '\\') . '\\' . $bundleName;
         }
 
         if (isset($autoload['psr-4'])) {
@@ -138,7 +138,6 @@ class ComposerHelper
 
             return $namespace . $bundleName;
         }
-        
 
         return $bundleName;
     }
