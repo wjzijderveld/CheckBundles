@@ -51,7 +51,7 @@ class ComposerHelper
             $installPath .= '/' . current($autoload['psr-4']);
         }
 
-        return glob(rtimr($installPath, '/') . '/*Bundle.php');
+        return glob(rtrim($installPath, '/') . '/*Bundle.php');
     }
 
     /**
