@@ -31,7 +31,7 @@ class ComposerTestCase extends \PHPUnit_Framework_TestCase
 
     private function createRepositoryManager(\Composer\Config $config)
     {
-        $manager = new \Composer\Repository\RepositoryManager(new \Composer\IO\NullIo(), $config);
+        $manager = new \Composer\Repository\RepositoryManager(new \Composer\IO\NullIO(), $config);
         $manager->addRepository(new \Composer\Repository\ArrayRepository(array()));
 
         return $manager;
