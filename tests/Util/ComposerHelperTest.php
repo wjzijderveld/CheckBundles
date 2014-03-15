@@ -10,14 +10,17 @@
  * file that was distributed with this source code.
  */
 namespace WillemJan\CheckBundles\Util;
+
 use Composer\Package\RootPackage;
+use Composer\Package\PackageInterface;
+use Composer\Package\Package;
 
 /**
  * Description of ComposerHelperTest
  *
  * @author willemjan
  */
-class ComposerHelperTest extends \PHPUnit_Framework_TestCase
+class ComposerHelperTest extends \ComposerTestCase
 {
     /** @var \Composer\Composer|\PHPUnit_Framework_MockObject_MockObject */
     protected $composerMock;
@@ -42,32 +45,24 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $type
      * @param string $targetDir
-     * @return \Composer\Package\CompletePackage
+     * @param array $autoload
+     * @return \Composer\Package\Package
      */
-    protected function createPackageMock($name, $type, $targetDir)
+    protected function createPackage($name, $type, array $autoload)
     {
-        $package = $this->getMockBuilder('Composer\Package\CompletePackage')
-            ->setMethods(array('getTargetDir', 'getType'))
-            ->setConstructorArgs(array($name, 'dev-master', '1.x-dev'))
-            ->getMock();
-
-        $package->expects($this->any())
-                ->method('getType')
-                ->will($this->returnValue($type));
-        
-        $package->expects($this->any())
-                ->method('getTargetDir')
-                ->will($this->returnValue($targetDir));
+        $package = new Package($name, 'dev-master', '9999999-dev');
+        $package->setType($type);
+        $package->setAutoload($autoload);
         
         return $package;
     }
     
     protected function getExamplePackages()
     {
-        $demoBundle = $this->createPackageMock('acme/demo-bundle', 'symfony-bundle', 'Acme/DemoBundle');
+        $demoBundle = $this->createPackage('acme/demo-bundle', 'symfony-bundle', array('psr-0' => array('Acme\\DemoBundle' => '')));
         $packages = array(
-            $this->createPackageMock('foo/test-library', 'library', 'foo/testLibrary'),
-            $this->createPackageMock('doctrine/doctrine-bundle', 'symfony-bundle', 'Doctrine/ORM/DoctrineBundle'),
+            $this->createPackage('foo/test-library', 'library', array('psr-0' => array('' => 'foo/testLibrary'))),
+            $this->createPackage('doctrine/doctrine-bundle', 'symfony-bundle', array('psr-0' => array('Doctrine\\ORM\\DoctrineBundle' => ''))),
             $demoBundle,
             new \Composer\Package\AliasPackage($demoBundle, '1.0.0', 'v1.0.0'),
         );
@@ -77,16 +72,11 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
     
     public function testGetBundleName()
     {
+        $package = $this->createPackage('foo/bar-bundle', 'symfony-bundle', array('psr-0' => array('Foo\\Bar\\FooBarBundle' => '')));
         $helper = $this->getHelper();
-        $package = $this->getMock('\Composer\Package\CompletePackage', array('getTargetDir'), array(), '', false);
-        $package->expects($this->any())
-                ->method('getTargetDir')
-                ->will($this->returnValue('Foo/Bar/FooBarBundle'));
         
-        $method = new \ReflectionMethod($helper, 'getBundleName');
-        $method->setAccessible(true);
-        $this->assertEquals('Foo\Bar\FooBarBundle\FooBarBundle', $method->invoke($helper, $package, 'FooBarBundle.php'));
-        $this->assertEquals('Foo\Bar\FooBarBundle\TestBundle', $method->invoke($helper, $package, 'TestBundle.php'));
+        $this->assertEquals('Foo\Bar\FooBarBundle\FooBarBundle', $helper->getFQCN($package, 'FooBarBundle.php'));
+        $this->assertEquals('Foo\Bar\FooBarBundle\TestBundle', $helper->getFQCN($package, 'TestBundle.php'));
     }
     
     public function testGetConfiguredSymfonyBundles()
@@ -115,8 +105,8 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
     public function testIgnoredBundles()
     {
         $packages = array(
-            $this->createPackageMock('foo/foo-bundle', 'symfony-bundle', 'Acme\FooBundle'),
-            $this->createPackageMock('acme/library-bundle', 'symfony-bundle', 'Acme\LibraryBundle'),
+            $this->createPackage('foo/foo-bundle', 'symfony-bundle', array('psr-0' => array('Acme\FooBundle' => ''))),
+            $this->createPackage('acme/library-bundle', 'symfony-bundle', array('psr-0' => array('Acme\LibraryBundle' => ''))),
         );
 
         $rootPackage = new RootPackage('DemoPackage', 'dev-master', '1.x-dev');
@@ -166,5 +156,34 @@ class ComposerHelperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->localRepository));
 
         $this->assertEquals(array(), $composerHelper->getNonActiveSymfonyBundles($kernelHelper->getBundlesForKernels()));
+    }
+
+    /**
+     * @test
+     * @dataProvider bundleNameProvider
+     */
+    public function it_should_determine_the_bundle_name_with_different_autoloaders($expectedBundleName, $package, $bundleFileName)
+    {
+        $composer = $this->getComposer();
+
+        $composerHelper = new \WillemJan\CheckBundles\Util\ComposerHelper($composer);
+        $this->assertEquals($expectedBundleName, $composerHelper->getFQCN($package, $bundleFileName));
+    }
+
+    public function bundleNameProvider()
+    {
+        $packages = $this->getComposer()->getRepositoryManager()->getLocalRepository()->getPackages();
+
+        return array(
+            array('Acme\FooBundle\AcmeFooBundle', $packages[0], $this->getInstallPath($packages[0]) . '/AcmeFooBundle.php'),
+            array('Acme\BarBundle\AcmeBarBundle', $packages[1], $this->getInstallPath($packages[1]) . '/src/AcmeBarBundle.php'),
+            array('Acme\FooBarBundle\AcmeFooBarBundle', $packages[2], $this->getInstallPath($packages[2]) . '/AcmeFooBarBundle.php'),
+
+        );
+    }
+
+    protected function getInstallPath(PackageInterface $package)
+    {
+        return $this->getComposer()->getInstallationManager()->getInstallPath($package);
     }
 }

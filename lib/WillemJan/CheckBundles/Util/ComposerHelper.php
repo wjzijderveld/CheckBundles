@@ -34,11 +34,24 @@ class ComposerHelper
         return $this->composer->getRepositoryManager()->getLocalRepository();
     }
 
+    /**
+     * This method tries the find the BundleFile in the root of
+     * the given package. At this moment we don't support bundles
+     * that don't have the Bundle file in the package root.
+     */
     protected function findBundleFiles(PackageInterface $package)
     {
         $installPath = $this->composer->getInstallationManager()->getInstallPath($package);
 
-        return glob($installPath . '/*Bundle.php');
+        $autoload = $package->getAutoload();
+        if (isset($autoload['psr-0'])) {
+            $installPath .= '/' . current($autoload['psr-0']);
+        }
+        if (isset($autoload['psr-4'])) {
+            $installPath .= '/' . current($autoload['psr-4']);
+        }
+
+        return glob(rtimr($installPath, '/') . '/*Bundle.php');
     }
 
     /**
@@ -64,7 +77,7 @@ class ComposerHelper
                 if (count($bundleFiles)) {
                     // Take the first first we find
                     // Not sure how to find the Bundle's name any other way
-                    $bundleName = $this->getBundleName($package, $bundleFiles[0]);
+                    $bundleName = $this->getFQCN($package, $bundleFiles[0]);
                     $symfonyBundles[] = $bundleName;
                 }
             }
@@ -100,15 +113,33 @@ class ComposerHelper
     }
 
     /**
-     * Try to determine the package name with the filename and package target directory
-     * Don't really think this is 100% correct, but works for now
+     * Try to determine the package name with the filename and
+     * the package autoload definition.
+     * This won't work 100%, f.e. with Bundles that have only have
+     * an autoloader prefix, instead of the full namespace untill the BundleFile
      *
      * @param  \Composer\Package\PackageInterface $package
      * @param  type                               $bundleFileName
      * @return string
      */
-    protected function getBundleName(PackageInterface $package, $bundleFileName)
+    public function getFQCN(PackageInterface $package, $bundleFileName)
     {
-        return str_replace('/', '\\', $package->getTargetDir()) . '\\' . substr(basename($bundleFileName), 0, -4);
+        $bundleName = substr(basename($bundleFileName), 0, -4);
+        $autoload = $package->getAutoload();
+        if (isset($autoload['psr-0'])) {
+            $namespace = key($autoload['psr-0']);
+            $target = current($autoload['psr-0']);
+
+            return $namespace . '\\' . $bundleName;
+        }
+
+        if (isset($autoload['psr-4'])) {
+            $namespace = key($autoload['psr-4']);
+
+            return $namespace . $bundleName;
+        }
+        
+
+        return $bundleName;
     }
 }

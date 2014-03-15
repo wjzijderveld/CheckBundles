@@ -1,0 +1,39 @@
+{
+    "repositories": [{
+        "type": "package",
+        "package": {
+            "name": "acme/foo",
+            "version": "dev-master",
+            "dist": {
+                "url": "php://memory",
+                "type": "file"
+            },
+            "autoload": {
+                "psr-0": {
+                    "Foo": "src/"
+                }
+            }
+        }
+    }, {
+        "type": "package",
+        "package": {
+            "name": "acme/bar",
+            "version": "dev-master",
+            "dist": {
+                "url": "php://memory",
+                "type": "file"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Foo\\": ""
+                }
+            }
+        }
+    },{
+        "packagist": false
+    }],
+    "require": {
+        "acme/foo": "dev-master",
+        "acme/bar": "dev-master"
+    }
+}
