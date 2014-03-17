@@ -126,9 +126,9 @@ class ComposerHelper
     {
         $bundleName = substr(basename($bundleFileName), 0, -4);
         $autoload = $package->getAutoload();
+
         if (isset($autoload['psr-0'])) {
             $namespace = key($autoload['psr-0']);
-            $target = current($autoload['psr-0']);
 
             return rtrim($namespace, '\\') . '\\' . $bundleName;
         }
