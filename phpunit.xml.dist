@@ -3,11 +3,12 @@
     colors          = "true"
     stopOnFailure   = "false"
     bootstrap       = "tests/bootstrap.php">
-    
+
     <testsuites>
         <testsuite name="Basic Tests">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    
+
 </phpunit>
+
