@@ -24,6 +24,9 @@ class KernelHelper
     /** @var string */
     protected $webDir = 'web';
 
+    /**
+     * @param string $projectRoot
+     */
     public function __construct($projectRoot)
     {
         $this->projectRoot = $projectRoot;
@@ -124,11 +127,10 @@ class KernelHelper
     }
 
     /**
-     * @param string $appDir
+     * @param string $webDir
      */
     public function setWebDir($webDir)
     {
         $this->webDir = $webDir;
     }
-
 }
