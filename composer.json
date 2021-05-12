@@ -10,10 +10,11 @@
         "role": "Developer"
     }],
     "require": {
-        "symfony/http-kernel": ">=2.0.0"
+        "symfony/http-kernel": ">=2.0.0",
+        "symfony/http-foundation": "^2.8.52"
     },
     "require-dev": {
-        "composer/composer": "*"
+        "composer/composer": "^1.10.22"
         },
     "autoload": {
         "psr-0": {"WillemJan": "lib/"}
